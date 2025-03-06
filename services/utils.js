@@ -7,14 +7,13 @@ const formatData = (data, query, name) => {
     const end = query._end
     const limit = query._limit
     const sort = query._sort
-    const order = query._order
     const page = query._page
     const perPage = query._per_page
 
     let response = [...data]
     
     response = filterData(response, query)
-    response = sortData(response, sort, order)
+    response = sortData(response, sort)
     response = sliceData(response, {start, end, limit})
     response = response.map(item => embedData(item, embed, name))
     response = paginateData(response, page, perPage)
@@ -81,7 +80,7 @@ const filterData = (data, query) => {
     return filteredData
 }
 
-const sortData = (data, sort, order = 'asc') => {
+const sortData = (data, sort) => {
     if (!data || data.length === 0){
         return []
     }
@@ -90,32 +89,14 @@ const sortData = (data, sort, order = 'asc') => {
         return data
     }
 
+    const sortArr = sort.split(',')
+    console.log(sortArr)
+
     const sortedData = [...data]
-
-    sortedData.sort((a, b) => {
-        const aProperty = a[sort]
-        const bProperty = b[sort]
-
-        if (!isNaN(aProperty) && !isNaN(bProperty)){
-            if (order.toLowerCase() === 'desc'){
-                return bProperty - aProperty
-            } else {
-                return aProperty - bProperty
-            }
-        }
-
-        const aPropertySrt = aProperty.toUpperCase()
-        const bPropertyStr = bProperty.toUpperCase()
-        if (aPropertySrt < bPropertyStr) {
-            return order.toLowerCase() === 'desc' ? 1 : -1
-        }
-        if (aPropertySrt > bPropertyStr) {
-            return order.toLowerCase() === 'desc' ? -1 : 1
-        }
-
-        return 0
-    })
     
+
+    sortedData.sort((a, b) => sortItem(a, b, sortArr))  
+
     return sortedData
 }
 
@@ -235,6 +216,7 @@ const searchInItem = (item,keyName, value) => {
 
     return false
 }
+
 const filterItem = (item, keyName, value, condition) => {
     if (keyName === 'q' && !condition){
         return searchInItem(item, keyName, value)
@@ -272,6 +254,39 @@ const filterItem = (item, keyName, value, condition) => {
     }
 }
 
+const sortItem = (a, b, sortArr) => {
+    if (!sortArr || sortArr.length === 0){
+        return 0
+    }
+
+    const sort = sortArr[0]
+    const isDesc = sort[0] === '-'
+    const sortBy = isDesc ? sort.split('-')[1] : sort
+    
+    const aProperty = a[sortBy]
+    const bProperty = b[sortBy]
+
+    if (!isNaN(aProperty) && !isNaN(bProperty)){
+        if (aProperty !== bProperty){
+            if (isDesc){
+                return bProperty - aProperty
+            } else {
+                return aProperty - bProperty
+            }
+        }  
+    }
+    
+    const aPropertySrt = aProperty.toString().toUpperCase()
+    const bPropertyStr = bProperty.toString().toUpperCase()
+    if (aPropertySrt < bPropertyStr) {
+        return isDesc ? 1 : -1
+    }
+    if (aPropertySrt > bPropertyStr) {
+        return isDesc ? -1 : 1
+    }
+
+    return sortItem(a, b, sortArr.slice(1))
+}
 
 
 module.exports = { formatData, sliceData, filterData, sortData, embedData, getSingleDataById, getMultipleDataById }
