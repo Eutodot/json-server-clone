@@ -7,7 +7,7 @@ const usersRoutes = require('./routes/users')
 const albumsRoutes = require('./routes/albums')
 const photosRoutes = require('./routes/photos')
 const commentsRoutes = require('./routes/comments')
-
+// noooo :(
 const app = express()
 
 app.use(cors())
