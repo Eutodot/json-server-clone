@@ -1,5 +1,7 @@
 const data = require("../data/data")
 const pluralize = require('pluralize')
+const fs = require('fs')
+const path = require('path')
 
 const formatData = (data, query, name) => {
     const embed = query._embed
@@ -68,7 +70,7 @@ const filterData = (data, query) => {
         if (key[0] === '_'){
             continue
         }
-        
+
         const condition = key.split('_')[1]
         const keyName = key.split('_')[0]
         const value = query[key]
@@ -90,7 +92,6 @@ const sortData = (data, sort) => {
     }
 
     const sortArr = sort.split(',')
-    console.log(sortArr)
 
     const sortedData = [...data]
     
@@ -101,7 +102,7 @@ const sortData = (data, sort) => {
 }
 
 const paginateData = (data, pageNum, perPage = 10) => {
-    if (pageNum < 1){
+    if (!pageNum || pageNum < 1){
         return data
     }
     const items = data.length
@@ -222,7 +223,7 @@ const filterItem = (item, keyName, value, condition) => {
         return searchInItem(item, keyName, value)
     }
 
-    const itemValue = item[keyName]
+    const itemValue = getItemValue(item, keyName.split('.'))
 
     if (!condition){
         if (typeof itemValue === 'string'){
@@ -263,8 +264,8 @@ const sortItem = (a, b, sortArr) => {
     const isDesc = sort[0] === '-'
     const sortBy = isDesc ? sort.split('-')[1] : sort
     
-    const aProperty = a[sortBy]
-    const bProperty = b[sortBy]
+    const aProperty = getItemValue(a, sortBy.split('.'))
+    const bProperty = getItemValue(b, sortBy.split('.'))
 
     if (!isNaN(aProperty) && !isNaN(bProperty)){
         if (aProperty !== bProperty){
@@ -288,5 +289,33 @@ const sortItem = (a, b, sortArr) => {
     return sortItem(a, b, sortArr.slice(1))
 }
 
+const getItemValue = (item, keyNames) => {
+    if (!keyNames || keyNames.length === 0){
+        return item
+    }
+    
+    const keyName = keyNames[0]
+    const itemValue = item[keyName]
 
-module.exports = { formatData, sliceData, filterData, sortData, embedData, getSingleDataById, getMultipleDataById }
+    if (!itemValue){
+        return item
+    }
+
+    return getItemValue(itemValue, keyNames.slice(1))
+}
+
+const getDbJsonData = (fileName) => {
+    if (!fileName){
+        throw new Error("no file name")
+    }
+    const dir = './db'
+    const file = fileName
+    const filePath = path.join(dir, file)
+    const dataJson = fs.readFileSync(filePath, 'utf8')
+    const parsedData = JSON.parse(dataJson)
+
+    return parsedData
+}
+
+
+module.exports = { formatData, sliceData, filterData, sortData, embedData, getSingleDataById, getMultipleDataById, getDbJsonData }
