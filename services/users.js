@@ -1,7 +1,8 @@
-const users = require('../data/users')
-const { embedData, formatData } = require('./utils')
+const { embedData, formatData, updateDbJsonData } = require('./utils')
 
 const getUsers = (query) => {
+    const users = getDbJsonData('users')  
+
     if (!users){
         return []
     }
@@ -12,6 +13,7 @@ const getUsers = (query) => {
 }
 
 const getUserById = (id, query) => {
+    const users = getDbJsonData('users')  
     const embed = query._embed
 
     let foundUser = users.find(user => user.id === id)
@@ -21,33 +23,51 @@ const getUserById = (id, query) => {
 }
 
 const postNewUser = newUser => {
+    const users = getDbJsonData('users')  
+
     newUser.id = Math.random().toString().slice(2, 7)
     newUser.creationDate = new Date()
-    users.push(newUser)
+    users.unshift(newUser)
     
+    updateDbJsonData('users.json', users)
+
     return newUser
 }
 
 const editUser = (id, newUser) => {
+    const users = getDbJsonData('users')  
+
+    const foundIndex = users.findIndex(user => user.id === id)
+
+    if (foundIndex === -1){
+        throw new Error("Post not found :(")
+    }
+    const foundUser = posts[foundIndex]
+
     const updatedUser = { 
         ...newUser,
+        creationDate: foundUser.creationDate,
         id,
         lastModified: new Date()
         // slug: generatePersonSlug({...newPerson, id})
     }
     
-    const foundIndex = users.findIndex(user => user.id === id)
-    if (foundIndex !== -1){
-        users.splice(foundIndex, 1, updatedUser)
-    } 
+    users.splice(foundIndex, 1, updatedUser)
+    
+
+    updateDbJsonData('users.json', users)
 
     return updatedUser
 }
 
 const deleteUser = id => {
+    const users = getDbJsonData('users')  
+
     const foundIndex = users.findIndex(user => user.id === id)
     if (foundIndex !== -1){
         users.splice(foundIndex, 1)
+
+        updateDbJsonData('users.json', users)
     } 
 
     return users

@@ -1,7 +1,8 @@
-const albums = require('../data/albums')
-const { sliceData, sortData, formatData } = require('./utils')
+const { formatData, embedData, getDbJsonData, updateDbJsonData } = require('./utils')
 
 const getAlbums = (query) => {
+    const albums = getDbJsonData('albums')
+
     if (!albums){
         return []
     }
@@ -12,6 +13,7 @@ const getAlbums = (query) => {
 }
 
 const getAlbumById = (id, query) => {
+    const albums = getDbJsonData('albums')
     const embed = query._embed
 
     let foundAlbum = albums.find(album => album.id === id)
@@ -27,34 +29,51 @@ const getAlbumsByUserId = id => {
 }
 
 const postNewAlbum = newAlbum => {
+    const albums = getDbJsonData('albums')
+
     newAlbum.id = Math.random().toString().slice(2, 7)
     newAlbum.creationDate = new Date()
-    albums.push(newAlbum)
+    albums.unshift(newAlbum)
     
+    updateDbJsonData('albums.json', albums)
+
     return newAlbum
 }
 
 const editAlbum = (id, newAlbum) => {
+    const albums = getDbJsonData('albums')
+
+    const foundIndex = albums.findIndex(album => album.id === id)
+
+    if (foundIndex === -1){
+        throw new Error("Album not found :(")
+    }
+    const foundAlbum = posts[foundIndex]
+
     const updatedAlbum = { 
         ...newAlbum,
+        creationDate: foundAlbum.creationDate,
         id,
         lastModified: new Date()
         // slug: generatePersonSlug({...newPerson, id})
     }
 
-    const foundIndex = albums.findIndex(album => album.id === id)
-    if (foundIndex !== -1){
-        albums.splice(foundIndex, 1, updatedAlbum)
-    } 
+    albums.splice(foundIndex, 1, updatedAlbum)
+
+    updateDbJsonData('albums.json', albums)
 
     return updatedAlbum
 }
 
 const deleteAlbum = id => {
+    const albums = getDbJsonData('albums')
+
     const foundIndex = albums.findIndex(album => album.id === id)
     if (foundIndex !== -1){
         albums.splice(foundIndex, 1)
     } 
+    
+    updateDbJsonData('albums.json', albums)
 
     return albums
 }

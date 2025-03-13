@@ -1,18 +1,7 @@
-const { embedData, formatData, getDbJsonData } = require('./utils')
-const path = require('path')
-const fs = require('fs')
+const { embedData, formatData, getDbJsonData, updateDbJsonData } = require('./utils')
 
 const getPosts = (query) => {
-    const posts = getDbJsonData('posts.json')
-    
-    // postsData.push({
-    //     "userId": "1",
-    //     "id": Math.random().toString().slice(2, 7),
-    //     "title": "test",
-    //     "body": "repudiandae veniam quaerat sunt sed\nalias aut fugiat sit autem sed est\nvoluptatem omnis possimus esse voluptatibus quis\nest aut tenetur dolor neque",
-    //     "likes": 52
-    //   })
-    // fs.writeFileSync(filePath, JSON.stringify(postsData, null), 'utf8')  
+    const posts = getDbJsonData('posts')  
       
     if (!posts){
         return []
@@ -24,7 +13,7 @@ const getPosts = (query) => {
 }
 
 const getPostById = (id, query) => {
-    const posts = getDbJsonData('posts.json')
+    const posts = getDbJsonData('posts')
     const embed = query._embed
     
     let foundPost = posts.find(post => post.id === id)
@@ -40,24 +29,24 @@ const getPostsByUserId = id => {
 }
 
 const postNewPost = newPost => {
-    const posts = getDbJsonData('posts.json')
+    const posts = getDbJsonData('posts')
 
     newPost.id = Math.random().toString().slice(2, 7)
     newPost.creationDate = new Date()
-    posts.push(newPost)
+    posts.unshift(newPost)
 
-    fs.writeFileSync(path.join('./db', 'posts.json'), JSON.stringify(posts, null, 2), 'utf8')
+    updateDbJsonData('posts.json', posts)
 
     return newPost
 }
 
 const editPost = (id, newPost) => {
-    const posts = getDbJsonData('posts.json')
+    const posts = getDbJsonData('posts')
 
     const foundIndex = posts.findIndex(post => post.id === id)
     
     if (foundIndex === -1){
-        throw new Error("User not found :(")
+        throw new Error("Post not found :(")
     }
     const foundPost = posts[foundIndex]
 
@@ -71,18 +60,20 @@ const editPost = (id, newPost) => {
     }
 
     posts.splice(foundIndex, 1, updatedPost)
-    fs.writeFileSync(path.join('./db', 'posts.json'), JSON.stringify(posts, null, 2), 'utf8')
+
+    updateDbJsonData('posts.json', posts)
 
     return updatedPost
 }
 
 const deletePost = id => {
-    const posts = getDbJsonData('posts.json')
+    const posts = getDbJsonData('posts')
 
     const foundIndex = posts.findIndex(post => post.id === id)
     if (foundIndex !== -1){
         posts.splice(foundIndex, 1)
-        fs.writeFileSync(path.join('./db', 'posts.json'), JSON.stringify(posts, null, 2), 'utf8')
+        
+        updateDbJsonData('posts.json', posts)
     } 
 
     return posts

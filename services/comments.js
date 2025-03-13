@@ -1,7 +1,8 @@
-const comments = require('../data/comments')
-const { sliceData, sortData, formatData } = require('./utils')
+const { formatData, embedData, getDbJsonData, updateDbJsonData } = require('./utils')
 
 const getComments = (query) => {
+    const comments = getDbJsonData('comments')
+
     if (!comments){
         return []
     }
@@ -12,9 +13,10 @@ const getComments = (query) => {
 }
 
 const getCommentById = (id, query) => {
+    const comments = getDbJsonData('comments')
     const embed = query._embed
 
-    const foundComment = comments.find(comment => comment.id === id)
+    let foundComment = comments.find(comment => comment.id === id)
     foundComment = embedData(foundComment, embed, 'comment')
     
     return foundComment ?? {}
@@ -27,33 +29,50 @@ const getCommentsByPostId = id => {
 }
 
 const postNewComment = newComment => {
+    const comments = getDbJsonData('comments')
+
     newComment.id = Math.random().toString().slice(2, 7)
     newComment.creationDate = new Date()
     comments.unshift(newComment)
+
+    updateDbJsonData('comments.json', comments)
 
     return newComment
 }
 
 const editComment = (id, newComment) => {
+    const comments = getDbJsonData('comments')
+
+    const foundIndex = comments.findIndex(comment => comment.id === id)
+    
+    if (foundIndex === -1){
+        throw new Error("Comment not found :(")
+    }
+    const foundComment = posts[foundIndex]
+
     const updatedComment = { 
         ...newComment,
+        creationDate: foundComment.creationDate,
         id,
         lastModified: new Date()
         // slug: generatePersonSlug({...newPerson, id})
     }
 
-    const foundIndex = comments.findIndex(comment => comment.id === id)
-    if (foundIndex !== -1){
-        comments.splice(foundIndex, 1, updatedComment)
-    } 
+    comments.splice(foundIndex, 1, updatedComment)
+
+    updateDbJsonData('comments.json', comments)
 
     return updatedComment
 }
 
 const deleteComment = id => {
+    const comments = getDbJsonData('comments')
+
     const foundIndex = comments.findIndex(comment => comment.id === id)
     if (foundIndex !== -1){
         comments.splice(foundIndex, 1)
+        
+        updateDbJsonData('comments.json', comments)
     } 
 
     return comments

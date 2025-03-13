@@ -1,7 +1,8 @@
-const photos = require('../data/photos')
-const { sliceData, sortData, formatData } = require('./utils')
+const { formatData, embedData, getDbJsonData, updateDbJsonData } = require('./utils')
 
 const getPhotos = (query) => {
+    const photos = getDbJsonData('photos')  
+
     if (!photos){
         return []
     }
@@ -12,6 +13,7 @@ const getPhotos = (query) => {
 }
 
 const getPhotoById = (id, query) => {
+    const photos = getDbJsonData('photos')  
     const embed = query._embed
 
     let foundPhoto = photos.find(photo => photo.id === id)
@@ -20,24 +22,6 @@ const getPhotoById = (id, query) => {
     return foundPhoto ?? {}
 }
 
-// const embedPhoto = (photo, embed) => {
-//     if (!embed){
-//         return post
-//     }
-
-//     const embedList = Array.isArray(embed) ? embed : [embed]
-//     const embedData = embedList.map(item => item.toLowerCase())
-
-//     const albumId = photo.albumId
-//     const updatedPhoto = {...photo}
-    
-//     if (embedData.includes('album')){
-//         updatedPhoto.album = getPhotosByAlbumId(albumId)
-//     }
-    
-//     return updatedPhoto
-// }
-
 const getPhotosByAlbumId = id => {
     const foundPhotos = photos.filter(photo => photo.albumId === id)
     
@@ -45,33 +29,50 @@ const getPhotosByAlbumId = id => {
 }
 
 const postNewPhoto = newPhoto => {
+    const photos = getDbJsonData('photos')  
+
     newPhoto.id = Math.random().toString().slice(2, 7)
     newPhoto.creationDate = new Date()
     photos.push(newPhoto)
+
+    updateDbJsonData('photos.json', photos)
 
     return newPhoto
 }
 
 const editPhoto = (id, newPhoto) => {
+    const photos = getDbJsonData('photos')  
+
+    const foundIndex = photos.findIndex(photo => photo.id === id)
+
+    if (foundIndex === -1){
+        throw new Error("Photo not found :(")
+    }
+    const foundPhoto = posts[foundIndex]
+
     const updatedPhoto = { 
         ...newPhoto,
+        creationDate: foundPhoto.creationDate,
         id,
         lastModified: new Date()
         // slug: generatePersonSlug({...newPerson, id})
     }
     
-    const foundIndex = photos.findIndex(photo => photo.id === id)
-    if (foundIndex !== -1){
-        photos.splice(foundIndex, 1, updatedPhoto)
-    } 
+    photos.splice(foundIndex, 1, updatedPhoto)
+    
+    updateDbJsonData('photos.json', photos)
 
     return updatedPhoto
 }
 
 const deletePhoto = id => {
+    const photos = getDbJsonData('photos')  
+
     const foundIndex = photos.findIndex(photo => photo.id === id)
     if (foundIndex !== -1){
         photos.splice(foundIndex, 1)
+
+        updateDbJsonData('photos.json', photos)
     } 
 
     return photos

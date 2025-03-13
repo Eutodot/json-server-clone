@@ -167,7 +167,7 @@ const getSingleDataById = (collection, id) => {
         return {}
     }
 
-    const foundCollection = data[collection]
+    const foundCollection = getDbJsonData(collection)
     
     if (!foundCollection){
         return {}
@@ -183,7 +183,7 @@ const getMultipleDataById = (collection, id, nameId) => {
         return []
     }
 
-    const foundCollection = data[collection]
+    const foundCollection = getDbJsonData(collection)
     
     if (!foundCollection){
         return []
@@ -304,12 +304,12 @@ const getItemValue = (item, keyNames) => {
     return getItemValue(itemValue, keyNames.slice(1))
 }
 
-const getDbJsonData = (fileName) => {
-    if (!fileName){
-        throw new Error("no file name")
+const getDbJsonData = (collection) => {
+    if (!collection){
+        throw new Error("no collection name")
     }
     const dir = './db'
-    const file = fileName
+    const file = collection + '.json'
     const filePath = path.join(dir, file)
     const dataJson = fs.readFileSync(filePath, 'utf8')
     const parsedData = JSON.parse(dataJson)
@@ -317,5 +317,19 @@ const getDbJsonData = (fileName) => {
     return parsedData
 }
 
+const updateDbJsonData = (fileName, data) => {
+    if (!fileName){
+        throw new Error("no file name")
+    }
+    if (!data){
+        throw new Error("no data found")
+    }
+    const dir = './db'
+    const file = fileName
+    const filePath = path.join(dir, file)
 
-module.exports = { formatData, sliceData, filterData, sortData, embedData, getSingleDataById, getMultipleDataById, getDbJsonData }
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8')
+}
+
+
+module.exports = { formatData, sliceData, filterData, sortData, embedData, getSingleDataById, getMultipleDataById, getDbJsonData, updateDbJsonData }
