@@ -74,7 +74,7 @@ const deletePost = id => {
         posts.splice(foundIndex, 1)
         
         updateDbJsonData('posts.json', posts)
-    } 
+    }
 
     return posts
 }
