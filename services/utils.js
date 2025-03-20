@@ -1,4 +1,3 @@
-const data = require("../data/data")
 const pluralize = require('pluralize')
 const fs = require('fs')
 const path = require('path')
@@ -13,7 +12,7 @@ const formatData = (data, query, name) => {
     const perPage = query._per_page
 
     let response = [...data]
-    
+    console.log(query)
     response = filterData(response, query)
     response = sortData(response, sort)
     response = sliceData(response, {start, end, limit})
@@ -73,9 +72,8 @@ const filterData = (data, query) => {
 
         const condition = key.split('_')[1]
         const keyName = key.split('_')[0]
-        const value = query[key]
-
-
+        const value = query[key].toLowerCase()
+        
         filteredData = filteredData.filter(item => filterItem(item, keyName, value, condition))
     }   
 
@@ -219,19 +217,21 @@ const searchInItem = (item,keyName, value) => {
 }
 
 const filterItem = (item, keyName, value, condition) => {
+    const splitValues = value.split(',').map(item => item.trim())
+
     if (keyName === 'q' && !condition){
         return searchInItem(item, keyName, value)
     }
-
+    // console.log(keyName)
     const itemValue = getItemValue(item, keyName.split('.'))
 
     if (!condition){
         if (typeof itemValue === 'string'){
-            return itemValue.toLowerCase() === value.toLowerCase()
+            return splitValues.includes(itemValue.toLowerCase().replaceAll(',', ''))
         }
 
         if (typeof itemValue === 'number'){
-            return itemValue == value
+            return splitValues.some(item => item == itemValue)
         }
         
         return
@@ -294,6 +294,7 @@ const getItemValue = (item, keyNames) => {
         return item
     }
     
+    // console.log(item)
     const keyName = keyNames[0]
     const itemValue = item[keyName]
 

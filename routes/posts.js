@@ -31,10 +31,16 @@ router.put('/:id', (req, res, next) => {
     
     res.send(editPost(id, newPost))
 })
-
+//////////////////////////////////////////////
+router.delete('/', (req, res, next) => {
+    const query = req.query
+    
+    res.send(deletePost(query))
+})
+//////////////////////////////////////////////
 router.delete('/:id', (req, res, next) => {
     const { id } = req.params
-    
+
     res.send(deletePost(id))
 })
 

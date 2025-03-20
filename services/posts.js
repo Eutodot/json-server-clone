@@ -15,12 +15,27 @@ const getPosts = (query) => {
 const getPostById = (id, query) => {
     const posts = getDbJsonData('posts')
     const embed = query._embed
-    
+    // console.log(id)
     let foundPost = posts.find(post => post.id === id)
     foundPost = embedData(foundPost, embed, 'post')
 
     return foundPost ?? {}
 }
+
+// const getMultiplePostsById = (idArray, query) => {
+//     const posts = getDbJsonData('posts')
+//     const embed = query._embed
+
+//     const foundPosts = []
+    
+//     idArray.forEach(id => {
+//         let foundPost = posts.find(post => post.id === id)
+//         foundPost = embedData(foundPost, embed, 'post')
+//         foundPosts.push(foundPost)
+//     })
+
+//     return foundPosts ?? []
+// }
 
 const getPostsByUserId = id => {
     const foundPosts = posts.filter(post => post.userId === id)
