@@ -1,6 +1,6 @@
 const express = require('express')
 
-const { getPosts, getPostById, postNewPost, editPost, deletePost } = require('../services/posts')
+const { getPosts, getPostById, postNewPost, editPost, deletePost, deleteMultiplePosts } = require('../services/posts')
 
 const router = express.Router()
 
@@ -31,13 +31,13 @@ router.put('/:id', (req, res, next) => {
     
     res.send(editPost(id, newPost))
 })
-//////////////////////////////////////////////
+
 router.delete('/', (req, res, next) => {
     const query = req.query
     
-    res.send(deletePost(query))
+    res.send(deleteMultiplePosts(query))
 })
-//////////////////////////////////////////////
+
 router.delete('/:id', (req, res, next) => {
     const { id } = req.params
 
