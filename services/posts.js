@@ -47,7 +47,7 @@ const postNewPost = newPosts => {
     const posts = getDbJsonData('posts')
 
     postsToCreate = [...newPosts]
-    // sestadienis
+    // sekmadienis
     postsToCreate.map(newPost => {
         newPost.id = Math.random().toString().slice(2, 7)
         newPost.creationDate = new Date()
