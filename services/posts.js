@@ -42,12 +42,18 @@ const getPostsByUserId = id => {
     
     return foundPosts
 }
-//////////////////////////////////////////
+
 const postNewPost = newPosts => {
     const posts = getDbJsonData('posts')
+   
+    let postsToCreate = []
 
-    postsToCreate = [...newPosts]
-    // sekmadienis
+    if (!newPosts.length){
+        postsToCreate.push(newPosts)
+    } else {
+        postsToCreate = [...newPosts]
+    }
+    
     postsToCreate.map(newPost => {
         newPost.id = Math.random().toString().slice(2, 7)
         newPost.creationDate = new Date()
@@ -84,7 +90,7 @@ const editPost = (id, newPost) => {
 
     return updatedPost
 }
-////////////////////////////////////////////////////
+
 const deleteMultiplePosts = query => {
     const posts = getDbJsonData('posts')
 
