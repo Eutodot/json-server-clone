@@ -305,7 +305,7 @@ const getItemValue = (item, keyNames) => {
     return getItemValue(itemValue, keyNames.slice(1))
 }
 
-const getDbJsonData = (collection) => {
+const getDbJson = (collection) => {
     if (!collection){
         throw new Error("no collection name")
     }
@@ -318,18 +318,38 @@ const getDbJsonData = (collection) => {
     return parsedData
 }
 
-const updateDbJsonData = (fileName, data) => {
-    if (!fileName){
+const getDbJsonData = (collection) => {
+    if (!collection){
+        throw new Error("no collection name")
+    }
+    const { data } = getDbJson(collection)
+
+    return data
+}
+
+const getDbJsonRelationships = (collection) => {
+    if (!collection){
+        throw new Error("no collection name")
+    }
+    const { relationships } = getDbJson(collection)
+
+    return relationships
+}
+
+const updateDbJsonData = (collection, data) => {
+    if (!collection){
         throw new Error("no file name")
     }
     if (!data){
         throw new Error("no data found")
     }
     const dir = './db'
-    const file = fileName
+    const file = collection + '.json'
     const filePath = path.join(dir, file)
 
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8')
+    const relationships = getDbJsonRelationships(collection)
+    
+    fs.writeFileSync(filePath, JSON.stringify({relationships, data}, null, 2), 'utf8')
 }
 
 

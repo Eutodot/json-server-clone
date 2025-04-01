@@ -42,7 +42,7 @@ router.delete('/:id', (req, res, next) => {
     const { id } = req.params
     const dependant = req.query._dependant
     console.log(dependant)
-    // res.send(deletePost(id))
+    res.send(deletePost(id))
 })
 
 module.exports = router

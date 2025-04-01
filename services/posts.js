@@ -1,6 +1,7 @@
 const { embedData, formatData, getDbJsonData, updateDbJsonData, filterData } = require('./utils')
+const { v4: uuid } = require('uuid')
 
-const getPosts = (query) => {
+const getPosts = (query = {}) => {
     const posts = getDbJsonData('posts')  
       
     if (!posts){
@@ -12,7 +13,7 @@ const getPosts = (query) => {
     return response
 }
 
-const getPostById = (id, query) => {
+const getPostById = (id, query = {}) => {
     const posts = getDbJsonData('posts')
     const embed = query._embed
     // console.log(id)
@@ -48,19 +49,19 @@ const postNewPost = newPosts => {
    
     let postsToCreate = []
 
-    if (!newPosts.length){
-        postsToCreate.push(newPosts)
-    } else {
+    if (newPosts.length){
         postsToCreate = [...newPosts]
+    } else {
+        postsToCreate.push(newPosts)
     }
     
     postsToCreate.map(newPost => {
-        newPost.id = Math.random().toString().slice(2, 7)
+        newPost.id = uuid()
         newPost.creationDate = new Date()
         posts.unshift(newPost)
     })
 
-    updateDbJsonData('posts.json', posts)
+    updateDbJsonData('posts', posts)
 
     return postsToCreate
 }
@@ -86,7 +87,7 @@ const editPost = (id, newPost) => {
 
     posts.splice(foundIndex, 1, updatedPost)
 
-    updateDbJsonData('posts.json', posts)
+    updateDbJsonData('posts', posts)
 
     return updatedPost
 }
@@ -103,19 +104,19 @@ const deleteMultiplePosts = query => {
         }
     })
 
-    updateDbJsonData('posts.json', posts)
+    updateDbJsonData('posts', posts)
 
     return posts
 }
 
 const deletePost = id => {
     const posts = getDbJsonData('posts')
-
+    console.log("🚀 ~ posts:", posts)
     const foundIndex = posts.findIndex(post => post.id === id)
     if (foundIndex !== -1){
         posts.splice(foundIndex, 1)
         
-        updateDbJsonData('posts.json', posts)
+        updateDbJsonData('posts', posts)
     }
 
     return posts

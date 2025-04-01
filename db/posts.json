@@ -1,45 +1,69 @@
-[
-  {
-    "userId": "1",
-    "id": "1",
-    "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-    "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto",
-    "likes": 45
+{
+  "relationships": {
+    "parent": "user",
+    "children": [
+      "comments"
+    ]
   },
-  {
-    "userId": "1",
-    "id": "2",
-    "title": "qui est esse",
-    "body": "est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla",
-    "likes": 2
-  },
-  {
-    "userId": "2",
-    "id": "4",
-    "title": "qui, est esse",
-    "body": "jelly",
-    "likes": 19
-  },
-  {
-    "userId": "1",
-    "id": "47608",
-    "title": "test",
-    "body": "repudiandae veniam quaerat sunt sed\nalias aut fugiat sit autem sed est\nvoluptatem omnis possimus esse voluptatibus quis\nest aut tenetur dolor neque",
-    "likes": 52
-  },
-  {
-    "userId": "1",
-    "id": "12632",
-    "title": "test",
-    "body": "repudiandae veniam quaerat sunt sed\nalias aut fugiat sit autem sed est\nvoluptatem omnis possimus esse voluptatibus quis\nest aut tenetur dolor neque",
-    "likes": 52
-  },
-  {
-    "userId": "3",
-    "title": "hello",
-    "body": "world",
-    "likes": 546,
-    "id": "72228",
-    "lastModified": "2025-03-11T15:39:12.487Z"
-  }
-]
+  "data": [
+    {
+      "userId": "1",
+      "title": "user post1",
+      "body": "body body1",
+      "likes": 6,
+      "id": "f787b3a8-d4ee-41ce-93c1-e9f476890bea",
+      "creationDate": "2025-04-01T14:43:45.665Z"
+    },
+    {
+      "userId": "1",
+      "title": "user post",
+      "body": "body body",
+      "likes": 78,
+      "id": "6b91bc40-4c09-4c49-94be-d0dff6072a56",
+      "creationDate": "2025-04-01T14:43:45.665Z"
+    },
+    {
+      "userId": "1",
+      "id": "1",
+      "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+      "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto",
+      "likes": 45
+    },
+    {
+      "userId": "1",
+      "id": "2",
+      "title": "qui est esse",
+      "body": "est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla",
+      "likes": 2
+    },
+    {
+      "userId": "2",
+      "id": "4",
+      "title": "qui, est esse",
+      "body": "jelly",
+      "likes": 19
+    },
+    {
+      "userId": "1",
+      "id": "47608",
+      "title": "test",
+      "body": "repudiandae veniam quaerat sunt sed\nalias aut fugiat sit autem sed est\nvoluptatem omnis possimus esse voluptatibus quis\nest aut tenetur dolor neque",
+      "likes": 52
+    },
+    {
+      "userId": "1",
+      "id": "12632",
+      "title": "test",
+      "body": "repudiandae veniam quaerat sunt sed\nalias aut fugiat sit autem sed est\nvoluptatem omnis possimus esse voluptatibus quis\nest aut tenetur dolor neque",
+      "likes": 52
+    },
+    {
+      "userId": "3",
+      "title": "hello",
+      "body": "world",
+      "likes": 546,
+      "id": "72228",
+      "lastModified": "2025-03-11T15:39:12.487Z"
+    }
+  ]
+}

@@ -8,7 +8,7 @@ const usersRoutes = require('./routes/users')
 const albumsRoutes = require('./routes/albums')
 const photosRoutes = require('./routes/photos')
 const commentsRoutes = require('./routes/comments')
-const { getPosts } = require('./services/posts')
+const { getPosts, getPostById } = require('./services/posts')
 
 const app = express()
 
@@ -28,6 +28,18 @@ app.get('/posts', (req, res, next) => {
     const posts = getPosts({})
     
     res.render('posts', {title: 'Posts page', posts})
+})
+app.get('/posts/:slug', (req, res, next) => {
+    const { slug } = req.params
+    const post = getPostById(slug)
+    if (post){
+        return res.render('post', {post})
+    } else {
+        return res.render('404')
+    }
+})
+app.get('/*', (req, res, next) => {
+        return res.render('404')
 })
 
 

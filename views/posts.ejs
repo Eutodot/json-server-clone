@@ -7,8 +7,10 @@
 </head>
 <body>
     <h1>Hello</h1>
+    <ul>
     <% posts.forEach(post => { %>
-        <p><%= post.title %></p>
+        <li><a href="/posts/<%= post.id %>"><%= post.title %></a></li>
     <% }) %>
+    </ul>
 </body>
 </html>
