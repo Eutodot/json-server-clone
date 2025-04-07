@@ -62,7 +62,7 @@ const filterData = (data, query) => {
     if (!query || Object.keys(query).length === 0){
         return data
     }
-    
+    console.log(query.test)
     let filteredData = [...data]
     
     for (const key in query){
