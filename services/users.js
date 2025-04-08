@@ -1,8 +1,9 @@
-const { embedData, formatData, updateDbJsonData } = require('./utils')
+const { embedData, formatData, updateDbJsonData, getDbJsonData } = require('./utils')
+const { v4: uuid } = require('uuid')
 
 const getUsers = (query) => {
     const users = getDbJsonData('users')  
-
+    
     if (!users){
         return []
     }
@@ -25,7 +26,7 @@ const getUserById = (id, query) => {
 const postNewUser = newUser => {
     const users = getDbJsonData('users')  
 
-    newUser.id = Math.random().toString().slice(2, 7)
+    newUser.id = uuid()
     newUser.creationDate = new Date()
     users.unshift(newUser)
     

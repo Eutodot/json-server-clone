@@ -305,6 +305,10 @@ const getItemValue = (item, keyNames) => {
     return getItemValue(itemValue, keyNames.slice(1))
 }
 
+const generateSlug = (name, data) => {
+    const slug = slugify(name)
+}
+
 const getDbJson = (collection) => {
     if (!collection){
         throw new Error("no collection name")
