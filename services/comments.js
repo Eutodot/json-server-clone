@@ -1,4 +1,5 @@
 const { formatData, embedData, getDbJsonData, updateDbJsonData } = require('./utils')
+const { v4: uuid } = require('uuid')
 
 const getComments = (query) => {
     const comments = getDbJsonData('comments')
@@ -31,7 +32,7 @@ const getCommentsByPostId = id => {
 const postNewComment = newComment => {
     const comments = getDbJsonData('comments')
 
-    newComment.id = Math.random().toString().slice(2, 7)
+    newComment.id = uuid()
     newComment.creationDate = new Date()
     comments.unshift(newComment)
 

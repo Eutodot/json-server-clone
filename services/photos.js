@@ -1,4 +1,5 @@
 const { formatData, embedData, getDbJsonData, updateDbJsonData } = require('./utils')
+const { v4: uuid } = require('uuid')
 
 const getPhotos = (query) => {
     const photos = getDbJsonData('photos')  
@@ -31,7 +32,7 @@ const getPhotosByAlbumId = id => {
 const postNewPhoto = newPhoto => {
     const photos = getDbJsonData('photos')  
 
-    newPhoto.id = Math.random().toString().slice(2, 7)
+    newPhoto.id = uuid()
     newPhoto.creationDate = new Date()
     photos.push(newPhoto)
 
