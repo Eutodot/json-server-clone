@@ -1,6 +1,7 @@
 const pluralize = require('pluralize')
 const fs = require('fs')
 const path = require('path')
+const slugify = require('slugify')
 
 const formatData = (data, query, name) => {
     const embed = query._embed
@@ -62,7 +63,7 @@ const filterData = (data, query) => {
     if (!query || Object.keys(query).length === 0){
         return data
     }
-    console.log(query.test)
+    //console.log(query.test)
     let filteredData = [...data]
     
     for (const key in query){
@@ -305,8 +306,19 @@ const getItemValue = (item, keyNames) => {
     return getItemValue(itemValue, keyNames.slice(1))
 }
 
-const generateSlug = (name, data) => {
-    const slug = slugify(name)
+const generateSlug = (title, data) => {
+    const slug = slugify(title)
+    // console.log(slug)
+    // console.log(data)
+    const randomNumber = Math.random().toString().slice(2, 6)
+    const modifiedSlug = slug + '-' + randomNumber
+    // console.log(modifiedSlug)
+    const foundSlug = filterData(data, {slug: modifiedSlug})
+    if (foundSlug.length === 0){
+        return slug
+    }
+
+    generateSlug(title, data)
 }
 
 const getDbJson = (collection) => {
@@ -357,4 +369,4 @@ const updateDbJsonData = (collection, data) => {
 }
 
 
-module.exports = { formatData, sliceData, filterData, sortData, embedData, getSingleDataById, getMultipleDataById, getDbJsonData, updateDbJsonData }
+module.exports = { formatData, sliceData, filterData, sortData, embedData, getSingleDataById, getMultipleDataById, generateSlug, getDbJsonData, updateDbJsonData }

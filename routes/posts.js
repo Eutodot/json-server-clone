@@ -10,10 +10,10 @@ router.get('/', (req, res, next) => {
     res.send(response)
 })
 
-router.get('/:id', (req, res, next) => {
-    const { id } = req.params
+router.get('/:slug', (req, res, next) => {
+    const { slug } = req.params
 
-    const response = getPostById(id, req.query)
+    const response = getPostById(slug, req.query)
 
     res.send(response)
 })

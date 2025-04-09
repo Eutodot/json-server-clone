@@ -1,4 +1,4 @@
-const { embedData, formatData, getDbJsonData, updateDbJsonData, filterData } = require('./utils')
+const { embedData, formatData, getDbJsonData, updateDbJsonData, filterData, generateSlug } = require('./utils')
 const { v4: uuid } = require('uuid')
 
 const getPosts = (query = {}) => {
@@ -13,11 +13,11 @@ const getPosts = (query = {}) => {
     return response
 }
 
-const getPostById = (id, query = {}) => {
+const getPostById = (slug, query = {}) => {
     const posts = getDbJsonData('posts')
     const embed = query._embed
     // console.log(id)
-    let foundPost = posts.find(post => post.id === id)
+    let foundPost = posts.find(post => post.slug === slug)
     foundPost = embedData(foundPost, embed, 'post')
 
     return foundPost ?? {}
@@ -47,18 +47,20 @@ const getPostsByUserId = id => {
 const postNewPost = newPosts => {
     const posts = getDbJsonData('posts')
    
-    let postsToCreate = []
-
-    if (newPosts.length){
-        postsToCreate = [...newPosts]
-    } else {
-        postsToCreate.push(newPosts)
-    }
+    const postsToCreate = [newPosts].flat()
     
-    postsToCreate.map(newPost => {
-        newPost.id = uuid()
-        newPost.creationDate = new Date()
-        posts.unshift(newPost)
+    postsToCreate.forEach(newPost => {
+        // newPost.id = uuid()
+        // newPost.creationDate = new Date()
+        // slug: generatePersonSlug({...newPerson, id})
+        const createdPost = {
+            ...newPost,
+            id: uuid(),
+            creationDate: new Date(),
+            slug: generateSlug(newPost.title, posts)
+        }
+        
+        posts.unshift(createdPost)
     })
 
     updateDbJsonData('posts', posts)
@@ -81,8 +83,8 @@ const editPost = (id, newPost) => {
         ...newPost,
         creationDate: foundPost.creationDate,
         id,
-        lastModified: new Date()
-        // slug: generatePersonSlug({...newPerson, id})
+        lastModified: new Date(),
+        slug: generateSlug(newPost.title, posts)
     }
 
     posts.splice(foundIndex, 1, updatedPost)

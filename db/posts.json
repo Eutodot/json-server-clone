@@ -7,6 +7,24 @@
   },
   "data": [
     {
+      "userId": "2",
+      "title": "testing slugs 2",
+      "body": "body slug body22",
+      "likes": 668,
+      "id": "ed8c0d49-a9dd-4ec5-b6b1-2872b133d7f0",
+      "creationDate": "2025-04-09T16:05:35.674Z",
+      "slug": "testing-slugs-2"
+    },
+    {
+      "userId": "1",
+      "title": "slugy",
+      "body": "body body22",
+      "likes": 48,
+      "id": "09ab67ff-4d32-41cb-9838-7bd34c2e24f7",
+      "creationDate": "2025-04-09T16:05:35.674Z",
+      "slug": "slugy"
+    },
+    {
       "userId": "1",
       "title": "user post1",
       "body": "body body1",
