@@ -10,10 +10,10 @@ router.get('/', (req, res, next) => {
     res.send(response)
 })
 
-router.get('/:id', (req, res, next) => {
-    const { id } = req.params
+router.get('/:slug', (req, res, next) => {
+    const { slug } = req.params
     
-    const response = getPhotoById(id, req.query)
+    const response = getPhotoById(slug, req.query)
 
     res.send(response)
 })
@@ -24,18 +24,18 @@ router.post('/photos', (req, res, next) => {
     res.send(postNewPhoto(newPhoto))
 })
 
-router.put('/:id', (req, res, next) => {
-    const { id } = req.params
+router.put('/:slug', (req, res, next) => {
+    const { slug } = req.params
     const newPhoto = req.body
     
     
-    res.send(editPhoto(id, newPhoto))
+    res.send(editPhoto(slug, newPhoto))
 })
 
-router.delete('/:id', (req, res, next) => {
-    const { id } = req.params
+router.delete('/:slug', (req, res, next) => {
+    const { slug } = req.params
     
-    res.send(deletePhoto(id))
+    res.send(deletePhoto(slug))
 })
 
 module.exports = router

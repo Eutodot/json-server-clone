@@ -13,11 +13,11 @@ const getComments = (query) => {
     return response
 }
 
-const getCommentById = (id, query) => {
+const getCommentById = (slug, query) => {
     const comments = getDbJsonData('comments')
     const embed = query._embed
 
-    let foundComment = comments.find(comment => comment.id === id)
+    let foundComment = comments.find(comment => comment.slug === slug)
     foundComment = embedData(foundComment, embed, 'comment')
     
     return foundComment ?? {}
@@ -41,10 +41,10 @@ const postNewComment = newComment => {
     return newComment
 }
 
-const editComment = (id, newComment) => {
+const editComment = (slug, newComment) => {
     const comments = getDbJsonData('comments')
 
-    const foundIndex = comments.findIndex(comment => comment.id === id)
+    const foundIndex = comments.findIndex(comment => comment.slug === slug)
     
     if (foundIndex === -1){
         throw new Error("Comment not found :(")
@@ -66,10 +66,10 @@ const editComment = (id, newComment) => {
     return updatedComment
 }
 
-const deleteComment = id => {
+const deleteComment = slug => {
     const comments = getDbJsonData('comments')
 
-    const foundIndex = comments.findIndex(comment => comment.id === id)
+    const foundIndex = comments.findIndex(comment => comment.slug === slug)
     if (foundIndex !== -1){
         comments.splice(foundIndex, 1)
         

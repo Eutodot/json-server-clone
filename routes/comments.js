@@ -10,10 +10,10 @@ router.get('/', (req, res, next) => {
     res.send(response)
 })
 
-router.get('/:id', (req, res, next) => {
-    const { id } = req.params
+router.get('/:slug', (req, res, next) => {
+    const { slug } = req.params
 
-    const response = getCommentById(id, req.query)
+    const response = getCommentById(slug, req.query)
 
     res.send(response)
 })
@@ -24,18 +24,18 @@ router.post('/', (req, res, next) => {
     res.send(postNewComment(newComment))
 })
 
-router.put('/:id', (req, res, next) => {
-    const { id } = req.params
+router.put('/:slug', (req, res, next) => {
+    const { slug } = req.params
     const newComment = req.body
     
     
-    res.send(editComment(id, newComment))
+    res.send(editComment(slug, newComment))
 })
 
-router.delete('/:id', (req, res, next) => {
-    const { id } = req.params
+router.delete('/:slug', (req, res, next) => {
+    const { slug } = req.params
     
-    res.send(deleteComment(id))
+    res.send(deleteComment(slug))
 })
 
 module.exports = router

@@ -1,4 +1,4 @@
-const { embedData, formatData, updateDbJsonData, getDbJsonData } = require('./utils')
+const { embedData, formatData, updateDbJsonData, getDbJsonData, filterData } = require('./utils')
 const { v4: uuid } = require('uuid')
 
 const getUsers = (query) => {
@@ -13,32 +13,41 @@ const getUsers = (query) => {
     return response
 }
 
-const getUserById = (id, query) => {
+const getUserById = (slug, query) => {
     const users = getDbJsonData('users')  
     const embed = query._embed
 
-    let foundUser = users.find(user => user.id === id)
+    let foundUser = users.find(user => user.slug === slug)
     foundUser = embedData(foundUser, embed, 'user')
 
     return foundUser ?? {}
 }
 
-const postNewUser = newUser => {
-    const users = getDbJsonData('users')  
+const postNewUser = newUsers => {
+    const users = getDbJsonData('users') 
 
-    newUser.id = uuid()
-    newUser.creationDate = new Date()
-    users.unshift(newUser)
+    const usersToCreate = [newUsers].flat()
+    
+    usersToCreate.forEach(newUser => {
+        const createdUser = {
+            ...newUser,
+            id: uuid(),
+            creationDate: new Date(),
+            slug: generateSlug(newUser.username, users)
+        }
+        
+        posts.unshift(createdUser)
+    })
     
     updateDbJsonData('users.json', users)
 
-    return newUser
+    return newUsers
 }
 
-const editUser = (id, newUser) => {
+const editUser = (slug, newUser) => {
     const users = getDbJsonData('users')  
 
-    const foundIndex = users.findIndex(user => user.id === id)
+    const foundIndex = users.findIndex(user => user.slug === slug)
 
     if (foundIndex === -1){
         throw new Error("Post not found :(")
@@ -48,9 +57,9 @@ const editUser = (id, newUser) => {
     const updatedUser = { 
         ...newUser,
         creationDate: foundUser.creationDate,
-        id,
-        lastModified: new Date()
-        // slug: generatePersonSlug({...newPerson, id})
+        //id,
+        lastModified: new Date(),
+        slug: generateSlug(newUser.username, users)
     }
     
     users.splice(foundIndex, 1, updatedUser)
@@ -61,10 +70,27 @@ const editUser = (id, newUser) => {
     return updatedUser
 }
 
-const deleteUser = id => {
+const deleteMultipleUsers = query => {
+    const users = getDbJsonData('users')
+
+    const filteredData = filterData(users, query)
+
+    filteredData.forEach(item => {
+        const foundIndex = users.findIndex(user => user.id === item.id)
+        if (foundIndex !== -1){
+            users.splice(foundIndex, 1)
+        }
+    })
+
+    updateDbJsonData('users', users)
+
+    return users
+}
+
+const deleteUser = slug => {
     const users = getDbJsonData('users')  
 
-    const foundIndex = users.findIndex(user => user.id === id)
+    const foundIndex = users.findIndex(user => user.slug === slug)
     if (foundIndex !== -1){
         users.splice(foundIndex, 1)
 

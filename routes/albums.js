@@ -10,10 +10,10 @@ router.get('/', (req, res, next) => {
     res.send(response)
 })
 
-router.get('/:id', (req, res, next) => {
-    const { id } = req.params
+router.get('/:slug', (req, res, next) => {
+    const { slug } = req.params
 
-    const response = getAlbumById(id, req.query)
+    const response = getAlbumById(slug, req.query)
 
     res.send(response)
 })
@@ -24,18 +24,18 @@ router.post('/', (req, res, next) => {
     res.send(postNewAlbum(newAlbum))
 })
 
-router.put('/:id', (req, res, next) => {
-    const { id } = req.params
+router.put('/:slug', (req, res, next) => {
+    const { slug } = req.params
     const newAlbum = req.body
     
     
-    res.send(editAlbum(id, newAlbum))
+    res.send(editAlbum(slug, newAlbum))
 })
 
-router.delete('/:id', (req, res, next) => {
-    const { id } = req.params
+router.delete('/:slug', (req, res, next) => {
+    const { slug } = req.params
     
-    res.send(deleteAlbum(id))
+    res.send(deleteAlbum(slug))
 })
 
 module.exports = router

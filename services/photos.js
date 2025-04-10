@@ -13,11 +13,11 @@ const getPhotos = (query) => {
     return response
 }
 
-const getPhotoById = (id, query) => {
+const getPhotoById = (slug, query) => {
     const photos = getDbJsonData('photos')  
     const embed = query._embed
 
-    let foundPhoto = photos.find(photo => photo.id === id)
+    let foundPhoto = photos.find(photo => photo.slug === slug)
     foundPhoto = embedData(foundPhoto, embed, 'photo')
     
     return foundPhoto ?? {}
@@ -41,10 +41,10 @@ const postNewPhoto = newPhoto => {
     return newPhoto
 }
 
-const editPhoto = (id, newPhoto) => {
+const editPhoto = (slug, newPhoto) => {
     const photos = getDbJsonData('photos')  
 
-    const foundIndex = photos.findIndex(photo => photo.id === id)
+    const foundIndex = photos.findIndex(photo => photo.slug === slug)
 
     if (foundIndex === -1){
         throw new Error("Photo not found :(")
@@ -66,10 +66,10 @@ const editPhoto = (id, newPhoto) => {
     return updatedPhoto
 }
 
-const deletePhoto = id => {
+const deletePhoto = slug => {
     const photos = getDbJsonData('photos')  
 
-    const foundIndex = photos.findIndex(photo => photo.id === id)
+    const foundIndex = photos.findIndex(photo => photo.slug === slug)
     if (foundIndex !== -1){
         photos.splice(foundIndex, 1)
 

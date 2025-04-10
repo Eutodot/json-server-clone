@@ -24,12 +24,12 @@ router.post('/', (req, res, next) => {
     res.send(postNewPost(newPost))
 })
 
-router.put('/:id', (req, res, next) => {
-    const { id } = req.params
+router.put('/:slug', (req, res, next) => {
+    const { slug } = req.params
     const newPost = req.body
     
     
-    res.send(editPost(id, newPost))
+    res.send(editPost(slug, newPost))
 })
 
 router.delete('/', (req, res, next) => {
@@ -38,11 +38,11 @@ router.delete('/', (req, res, next) => {
     res.send(deleteMultiplePosts(query))
 })
 
-router.delete('/:id', (req, res, next) => {
-    const { id } = req.params
+router.delete('/:slug', (req, res, next) => {
+    const { slug } = req.params
     const dependant = req.query._dependant
     console.log(dependant)
-    res.send(deletePost(id))
+    res.send(deletePost(slug))
 })
 
 module.exports = router

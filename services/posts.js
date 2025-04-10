@@ -68,10 +68,10 @@ const postNewPost = newPosts => {
     return postsToCreate
 }
 
-const editPost = (id, newPost) => {
+const editPost = (slug, newPost) => {
     const posts = getDbJsonData('posts')
 
-    const foundIndex = posts.findIndex(post => post.id === id)
+    const foundIndex = posts.findIndex(post => post.slug === slug)
     
     if (foundIndex === -1){
         throw new Error("Post not found :(")
@@ -82,7 +82,7 @@ const editPost = (id, newPost) => {
         // ...foundPost,
         ...newPost,
         creationDate: foundPost.creationDate,
-        id,
+        //id,
         lastModified: new Date(),
         slug: generateSlug(newPost.title, posts)
     }
@@ -111,10 +111,10 @@ const deleteMultiplePosts = query => {
     return posts
 }
 
-const deletePost = id => {
+const deletePost = slug => {
     const posts = getDbJsonData('posts')
-    console.log("🚀 ~ posts:", posts)
-    const foundIndex = posts.findIndex(post => post.id === id)
+    //console.log("🚀 ~ posts:", posts)
+    const foundIndex = posts.findIndex(post => post.slug === slug)
     if (foundIndex !== -1){
         posts.splice(foundIndex, 1)
         

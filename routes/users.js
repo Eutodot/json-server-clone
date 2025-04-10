@@ -10,10 +10,10 @@ router.get('/', (req, res, next) => {
     res.send(response)
 })
 
-router.get('/:id', (req, res, next) => {
-    const { id } = req.params
+router.get('/:slug', (req, res, next) => {
+    const { slug } = req.params
 
-    const response = getUserById(id, req.query)
+    const response = getUserById(slug, req.query)
 
     res.send(response)
 })
@@ -25,17 +25,17 @@ router.post('/', (req, res, next) => {
     res.send(postNewUser(newUser))
 })
 
-router.put('/:id', (req, res, next) => {
-    const { id } = req.params
+router.put('/:slug', (req, res, next) => {
+    const { slug } = req.params
     const newUser = req.body
     
-    res.send(editUser(id, newUser))
+    res.send(editUser(slug, newUser))
 })
 
-router.delete('/:id', (req, res, next) => {
-    const { id } = req.params
+router.delete('/:slug', (req, res, next) => {
+    const { slug } = req.params
     
-    res.send(deleteUser(id))
+    res.send(deleteUser(slug))
 })
 
 module.exports = router
