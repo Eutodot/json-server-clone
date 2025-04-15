@@ -8,6 +8,19 @@ const getPosts = (query = {}) => {
         return []
     }
 
+    posts.map(newPost => {
+        const updatedPost = { 
+            // ...foundPost,
+            ...newPost,
+            creationDate: foundPost.creationDate,
+            //id,
+            lastModified: new Date(),
+            slug: generateSlug(newPost.title, posts)
+        }
+
+        return updatedPost
+    })
+    updateDbJsonData('posts', posts)
     const response = formatData(posts, query, 'post')
 
     return response
